@@ -7,6 +7,7 @@ from django.contrib.sitemaps.views import sitemap
 from django.urls import path, reverse
 from clinic import views as v
 from clinic.security import doctor_required
+from notifications.views import retry_emails
 
 class PublicSitemap(Sitemap):
     changefreq = 'monthly'
@@ -18,6 +19,7 @@ class PublicSitemap(Sitemap):
         return reverse(item)
 
 urlpatterns = [
+    path('internal/retry-emails/', retry_emails, name='retry-emails'),
     path('', v.public_page, name='home'),
     path('about/', v.public_page, {'page': 'about'}, name='about'),
     path('services/', v.public_page, {'page': 'services'}, name='services'),

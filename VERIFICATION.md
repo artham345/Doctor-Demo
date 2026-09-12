@@ -1,5 +1,19 @@
 # Delivery verification
 
+## Gmail / free deployment update — 13 September 2026
+
+The expanded suite passed **50 tests in 33.123 seconds** against an isolated local PostgreSQL 17.11 database. The 16 added tests cover Gmail MIME encoding, send-only OAuth scope, sender matching, missing credentials, refresh failures, quota failures, sanitized errors, post-commit delivery, rollback safety, failed-send retries, delivery limited to new messages, callback failure containment, non-delivering backends, and authenticated/bounded retry requests.
+
+Production deployment checks and static collection passed; `makemigrations --check --dry-run` reported no changes. The default Render Blueprint now contains only one Free web service, with no paid worker or database. Source syntax, YAML structure, and archive exclusions are checked during packaging.
+
+All Gmail network calls in automated tests were mocked. **No real Gmail authorization, email delivery, GitHub schedule execution, or Render deployment has been performed.** Google credentials and user consent are still required; follow FREE_DEPLOYMENT.md. Existing Cloudinary account permissions were not changed or verified. No existing user database was used for tests.
+
+The sandbox blocked ordinary pip temporary-file access. For these checks, the new dependencies were loaded from isolated, SHA-256-verified PyPI wheels under the workspace, outside the delivered source. Users should run `pip install -r requirements.txt` in their normal terminal before using the Gmail backend. The refreshed archive excludes `.env*` secrets, OAuth credential files, SQLite databases, installed dependencies, and uploaded media.
+
+The original visual and booking audit below describes the initial release; its paid deployment discussion has been superseded by FREE_DEPLOYMENT.md and the current render.yaml.
+
+## Original release audit
+
 Verified on 12 September 2026 using Python 3.14, Django 5.2.17, and an actual PostgreSQL 17.11 database on Windows. Test data was fictional. The application and its initial migrations were exercised against PostgreSQL, with no SQLite substitution.
 
 ## Automated results

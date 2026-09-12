@@ -8,3 +8,6 @@ django-storages[s3]==1.14.6
 gunicorn==26.2.0
 cloudinary
 django-cloudinary-storage
+google-auth>=2.40,<3
+google-auth-oauthlib>=1.2,<2
+requests>=2.32.4,<3

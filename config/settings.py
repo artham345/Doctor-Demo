@@ -18,22 +18,22 @@ if os.getenv('RENDER_EXTERNAL_HOSTNAME'):
 SITE_URL = os.getenv('SITE_URL', 'http://127.0.0.1:8000').rstrip('/')
 CSRF_TRUSTED_ORIGINS = [s.strip() for s in os.getenv('CSRF_TRUSTED_ORIGINS', SITE_URL).split(',') if s.strip()]
 INSTALLED_APPS = ['django.contrib.admin', 'django.contrib.auth', 'django.contrib.contenttypes', 'django.contrib.sessions', 'django.contrib.messages', 'django.contrib.staticfiles', 'django.contrib.sitemaps', 'clinic', 'notifications']
-INSTALLED_APPS += ['cloudinary_storage', 'cloudinary']
 MIDDLEWARE = ['django.middleware.security.SecurityMiddleware', 'whitenoise.middleware.WhiteNoiseMiddleware', 'django.contrib.sessions.middleware.SessionMiddleware', 'django.middleware.common.CommonMiddleware', 'django.middleware.csrf.CsrfViewMiddleware', 'django.contrib.auth.middleware.AuthenticationMiddleware', 'django.contrib.messages.middleware.MessageMiddleware', 'django.middleware.clickjacking.XFrameOptionsMiddleware', 'clinic.middleware.PrivacyMiddleware']
 ROOT_URLCONF = 'config.urls'
 TEMPLATES = [{'BACKEND': 'django.template.backends.django.DjangoTemplates', 'DIRS': [BASE_DIR / 'templates'], 'APP_DIRS': True, 'OPTIONS': {'context_processors': ['django.template.context_processors.request', 'django.contrib.auth.context_processors.auth', 'django.contrib.messages.context_processors.messages', 'clinic.context_processors.clinic']}}]
 WSGI_APPLICATION = 'config.wsgi.application'
 ASGI_APPLICATION = 'config.asgi.application'
 DATABASES = {
-    'default': {
-        'ENGINE': 'django.db.backends.sqlite3',
-        'NAME': BASE_DIR / 'db.sqlite3',
-    }
+    'default': dj_database_url.parse(
+        os.environ['DATABASE_URL'],
+        conn_max_age=0,
+        conn_health_checks=True,
+    )
 }
 if os.getenv('TEST_DATABASE_NAME'):
     DATABASES['default']['TEST'] = {'NAME': os.environ['TEST_DATABASE_NAME']}
-# if DATABASES['default']['ENGINE'] != 'django.db.backends.postgresql':
-#     raise ImproperlyConfigured('This application requires PostgreSQL, including development and tests.')
+if DATABASES['default']['ENGINE'] != 'django.db.backends.postgresql':
+    raise ImproperlyConfigured('This application requires PostgreSQL, including development and tests.')
 AUTH_PASSWORD_VALIDATORS = [{'NAME': 'django.contrib.auth.password_validation.' + name} for name in ['UserAttributeSimilarityValidator', 'MinimumLengthValidator', 'CommonPasswordValidator', 'NumericPasswordValidator']]
 LANGUAGE_CODE = 'en-us'
 TIME_ZONE = os.getenv('TIME_ZONE', 'Asia/Kolkata')
@@ -54,6 +54,7 @@ elif not DEBUG:
 USE_CLOUDINARY = os.getenv('USE_CLOUDINARY', 'False').lower() == 'true'
 
 if USE_CLOUDINARY:
+    INSTALLED_APPS += ['cloudinary_storage', 'cloudinary']
     if USE_S3:
         raise ImproperlyConfigured(
             'Enable either Cloudinary or S3, not both.'
@@ -95,6 +96,12 @@ EMAIL_HOST_USER = os.getenv('EMAIL_HOST_USER', '')
 EMAIL_HOST_PASSWORD = os.getenv('EMAIL_HOST_PASSWORD', '')
 EMAIL_USE_TLS = os.getenv('EMAIL_USE_TLS', 'True').lower() == 'true'
 EMAIL_TIMEOUT = 15
+EMAIL_SEND_IMMEDIATELY = os.getenv('EMAIL_SEND_IMMEDIATELY', 'False').lower() == 'true'
+EMAIL_RETRY_TOKEN = os.getenv('EMAIL_RETRY_TOKEN', '')
+GMAIL_CLIENT_ID = os.getenv('GMAIL_CLIENT_ID', '')
+GMAIL_CLIENT_SECRET = os.getenv('GMAIL_CLIENT_SECRET', '')
+GMAIL_REFRESH_TOKEN = os.getenv('GMAIL_REFRESH_TOKEN', '')
+GMAIL_SENDER = os.getenv('GMAIL_SENDER', '')
 DEFAULT_FROM_EMAIL = os.getenv('DEFAULT_FROM_EMAIL', 'Clinic <clinic@example.com>')
 BOOKING_WINDOW_DAYS = 90
 DATA_UPLOAD_MAX_MEMORY_SIZE = 6 * 1024 * 1024

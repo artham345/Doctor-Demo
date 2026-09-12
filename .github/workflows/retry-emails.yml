@@ -1,0 +1,41 @@
+name: Retry clinic emails
+on:
+  schedule:
+    - cron: '23 * * * *'
+  workflow_dispatch:
+permissions: {}
+concurrency:
+  group: clinic-email-retry
+  cancel-in-progress: false
+jobs:
+  retry:
+    if: vars.ENABLE_EMAIL_RETRIES == 'true'
+    runs-on: ubuntu-latest
+    timeout-minutes: 2
+    steps:
+      - name: Retry a bounded batch
+        env:
+          RETRY_URL: ${{ secrets.EMAIL_RETRY_URL }}
+          RETRY_TOKEN: ${{ secrets.EMAIL_RETRY_TOKEN }}
+        shell: bash
+        run: |
+          python - <<'PY'
+          import os, sys, urllib.request
+          from urllib.parse import urlsplit
+          url = os.environ.get('RETRY_URL', '')
+          token = os.environ.get('RETRY_TOKEN', '')
+          parts = urlsplit(url)
+          if parts.scheme != 'https' or not parts.hostname or parts.username or parts.password or parts.query or parts.fragment or parts.path != '/internal/retry-emails/' or len(token) < 32:
+              sys.exit('Configure the HTTPS retry URL and a token of at least 32 characters.')
+          class NoRedirect(urllib.request.HTTPRedirectHandler):
+              def redirect_request(self, *args, **kwargs):
+                  return None
+          request = urllib.request.Request(url, data=b'', method='POST', headers={'Authorization': 'Bearer ' + token})
+          try:
+              with urllib.request.build_opener(NoRedirect()).open(request, timeout=105) as response:
+                  if response.status != 200:
+                      sys.exit('Retry failed. Check clinic email configuration.')
+          except Exception:
+              sys.exit('Retry failed or timed out. Check Gmail authorization and hosting availability.')
+          print('Email retry request completed.')
+          PY

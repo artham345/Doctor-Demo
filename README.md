@@ -1,5 +1,7 @@
 # Everwell — Doctor website & appointment system
 
+**Current deployment: zero-budget Gmail edition.** Follow [FREE_DEPLOYMENT.md](FREE_DEPLOYMENT.md) for Render Free, Neon, Gmail authorization, and hourly retries. `render.yaml` now creates only a free website. The previous paid SMTP architecture is preserved in `render.paid.yaml`. The Gmail backend attempts delivery after booking commits, so no second terminal is needed on the deployed free setup.
+
 A single Django application with a public clinic website and a private doctor portal. PostgreSQL stores clinic configuration, working periods, patients, appointments, and a durable email outbox. The supplied branding and doctor identity are fictional demo content.
 
 ## Included
@@ -164,7 +166,7 @@ In a second activated terminal, start email delivery:
 python manage.py send_notifications --watch
 ```
 
-The local console backend prints email messages to that terminal; it does **not** deliver to an inbox. Use only demo data with console email. The outbox is populated within the booking transaction, so no email is queued if booking rolls back. The worker retries failed delivery with backoff and removes message bodies after successful delivery. Delivery is at least once: a process crash after SMTP accepts a message can cause a duplicate on retry.
+Console and dummy backends do **not** deliver to an inbox. The outbox now retains messages when either is selected, rather than marking them delivered. Configure Gmail using FREE_DEPLOYMENT.md, or SMTP, to deliver them. The outbox is populated within the booking transaction, so no email is queued if booking rolls back. Delivery retries use backoff and remove message bodies after successful delivery. Delivery is at least once: a process crash after the provider accepts a message can cause a duplicate on retry.
 
 To create the real clinic, remove demo data first, then create a separate real doctor account:
 
@@ -247,12 +249,14 @@ git push -u origin main
 
 Before committing, confirm `.env`, uploaded photos, database dumps, patient data, and virtual environments are excluded. The provided `.gitignore` excludes local secrets, media, generated static files, and caches. Commit migrations and the vendored Bootstrap files. The project has no repository-specific credentials.
 
-## Render deployment
+## Legacy paid Render deployment (optional)
+
+The following section describes `render.paid.yaml`. Use that explicit Blueprint path only if choosing the paid SMTP deployment; the current zero-budget instructions are in FREE_DEPLOYMENT.md.
 
 The Blueprint creates **one web application**, one private PostgreSQL database, and a background email worker. The worker is not a second website. The supplied plans (`0.5c-512mb` web/worker and `0.1c-256mb` PostgreSQL) are paid; review Render's displayed costs before applying the Blueprint. No Render resources are provisioned by this project automatically.
 
 1. Push this project root to GitHub.
-2. In Render, create a **Blueprint** from the repository containing `render.yaml`.
+2. In Render, create a **Blueprint** from the repository and explicitly set its path to `render.paid.yaml`.
 3. Enter the prompted secrets and site values for `clinic-web`. Common non-secret settings and the generated application secret live in `clinic-shared`; the worker references the web service’s SMTP and site values. Render ignores `sync: false` inside environment groups, so all prompts are deliberately defined on the web service. For initial deployment, use the assigned `https://YOUR-SERVICE.onrender.com` address for `SITE_URL` and `CSRF_TRUSTED_ORIGINS`, and its hostname for `ALLOWED_HOSTS`.
 4. Set SMTP host, port, username, password, and a verified `DEFAULT_FROM_EMAIL`. The SMTP username does not have to equal the doctor's contact email.
 5. Apply the Blueprint. Check the web and worker logs for successful startup.

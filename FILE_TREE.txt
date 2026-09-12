@@ -1,6 +1,7 @@
 doctor_website/
 ├── .github/
 │   └── workflows/
+│       ├── retry-emails.yml
 │       └── tests.yml
 ├── clinic/
 │   ├── management/
@@ -35,6 +36,7 @@ doctor_website/
 │   ├── management/
 │   │   ├── commands/
 │   │   │   ├── __init__.py
+│   │   │   ├── authorize_gmail.py
 │   │   │   └── send_notifications.py
 │   │   └── __init__.py
 │   ├── migrations/
@@ -42,8 +44,10 @@ doctor_website/
 │   │   └── __init__.py
 │   ├── __init__.py
 │   ├── admin.py
+│   ├── gmail_backend.py
 │   ├── models.py
-│   └── services.py
+│   ├── services.py
+│   └── views.py
 ├── static/
 │   ├── css/
 │   │   └── style.css
@@ -101,16 +105,19 @@ doctor_website/
 │   └── base.html
 ├── tests/
 │   ├── __init__.py
-│   └── test_clinic.py
+│   ├── test_clinic.py
+│   └── test_gmail.py
 ├── .env.example
 ├── .gitattributes
 ├── .gitignore
 ├── FILE_TREE.txt
+├── FREE_DEPLOYMENT.md
 ├── README.md
 ├── VERIFICATION.md
 ├── build.sh
 ├── compose.yaml
 ├── gunicorn.conf.py
 ├── manage.py
+├── render.paid.yaml
 ├── render.yaml
 └── requirements.txt
