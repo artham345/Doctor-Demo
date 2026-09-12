@@ -60,7 +60,7 @@ class ProfileForm(StyledForm, PhoneMixin, forms.ModelForm):
     def clean_profile_image(self):
         photo = self.cleaned_data.get('profile_image')
         if photo and hasattr(photo, 'content_type'):
-            if not settings.DEBUG and not settings.USE_S3:
+            if not settings.DEBUG and not (settings.USE_S3 or settings.USE_CLOUDINARY):
                 raise ValidationError('Photo uploads need durable media storage. Ask your website administrator to enable it.')
             if photo.size > 5 * 1024 * 1024 or photo.content_type not in ['image/jpeg', 'image/png', 'image/webp']:
                 raise ValidationError('Use a JPEG, PNG, or WebP image under 5 MB.')

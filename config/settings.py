@@ -18,6 +18,7 @@ if os.getenv('RENDER_EXTERNAL_HOSTNAME'):
 SITE_URL = os.getenv('SITE_URL', 'http://127.0.0.1:8000').rstrip('/')
 CSRF_TRUSTED_ORIGINS = [s.strip() for s in os.getenv('CSRF_TRUSTED_ORIGINS', SITE_URL).split(',') if s.strip()]
 INSTALLED_APPS = ['django.contrib.admin', 'django.contrib.auth', 'django.contrib.contenttypes', 'django.contrib.sessions', 'django.contrib.messages', 'django.contrib.staticfiles', 'django.contrib.sitemaps', 'clinic', 'notifications']
+INSTALLED_APPS += ['cloudinary_storage', 'cloudinary']
 MIDDLEWARE = ['django.middleware.security.SecurityMiddleware', 'whitenoise.middleware.WhiteNoiseMiddleware', 'django.contrib.sessions.middleware.SessionMiddleware', 'django.middleware.common.CommonMiddleware', 'django.middleware.csrf.CsrfViewMiddleware', 'django.contrib.auth.middleware.AuthenticationMiddleware', 'django.contrib.messages.middleware.MessageMiddleware', 'django.middleware.clickjacking.XFrameOptionsMiddleware', 'clinic.middleware.PrivacyMiddleware']
 ROOT_URLCONF = 'config.urls'
 TEMPLATES = [{'BACKEND': 'django.template.backends.django.DjangoTemplates', 'DIRS': [BASE_DIR / 'templates'], 'APP_DIRS': True, 'OPTIONS': {'context_processors': ['django.template.context_processors.request', 'django.contrib.auth.context_processors.auth', 'django.contrib.messages.context_processors.messages', 'clinic.context_processors.clinic']}}]
@@ -50,6 +51,24 @@ if USE_S3:
 elif not DEBUG:
     # Production rejects uploads until durable storage is configured.
     STORAGES['default'] = {'BACKEND': 'clinic.storage.DisabledUploadStorage'}
+USE_CLOUDINARY = os.getenv('USE_CLOUDINARY', 'False').lower() == 'true'
+
+if USE_CLOUDINARY:
+    if USE_S3:
+        raise ImproperlyConfigured(
+            'Enable either Cloudinary or S3, not both.'
+        )
+
+    CLOUDINARY_STORAGE = {
+        'CLOUD_NAME': os.environ['CLOUDINARY_CLOUD_NAME'],
+        'API_KEY': os.environ['CLOUDINARY_API_KEY'],
+        'API_SECRET': os.environ['CLOUDINARY_API_SECRET'],
+        'SECURE': True,
+    }
+
+    STORAGES['default'] = {
+        'BACKEND': 'cloudinary_storage.storage.MediaCloudinaryStorage',
+    }
 DEFAULT_AUTO_FIELD = 'django.db.models.BigAutoField'
 LOGIN_URL = '/doctor/login/'
 LOGIN_REDIRECT_URL = '/doctor/dashboard/'
