@@ -1,0 +1,16 @@
+{{ appointment.doctor.clinic_name }}
+{{ heading }}
+
+Booking reference: {{ appointment.booking_id }}
+Doctor: {{ appointment.doctor.name }}
+Date: {{ appointment.appointment_date|date:'l, j F Y' }}
+Time: {{ appointment.appointment_time|time:'g:i A' }} (clinic local time)
+Status: {{ appointment.get_status_display }}
+Clinic: {{ appointment.doctor.clinic_name }}
+{{ appointment.doctor.clinic_address }}
+Phone: {{ appointment.doctor.phone }}
+{% if manage_url %}
+View or cancel: {{ manage_url }}
+Keep this link private. Anyone with it can cancel your appointment.
+{% endif %}
+{% if event == 'new' %}Doctor portal: {{ site_url }}/doctor/dashboard/{% endif %}

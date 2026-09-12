@@ -1,0 +1,42 @@
+name: Django checks
+on: [push, pull_request]
+jobs:
+  test:
+    runs-on: ubuntu-latest
+    services:
+      postgres:
+        image: postgres:17
+        env:
+          POSTGRES_DB: clinic
+          POSTGRES_USER: clinic
+          POSTGRES_PASSWORD: ci-only-password
+        ports: ["5432:5432"]
+        options: >-
+          --health-cmd "pg_isready -U clinic"
+          --health-interval 5s
+          --health-timeout 5s
+          --health-retries 10
+    env:
+      DEBUG: "True"
+      SECRET_KEY: ci-only-key-no-production-data-is-used
+      DATABASE_URL: postgresql://clinic:ci-only-password@127.0.0.1:5432/clinic
+      ALLOWED_HOSTS: localhost,127.0.0.1,testserver
+    steps:
+      - uses: actions/checkout@v4
+      - uses: actions/setup-python@v5
+        with:
+          python-version: "3.13"
+      - run: pip install -r requirements.txt
+      - run: python manage.py makemigrations --check --dry-run
+      - run: python manage.py migrate --noinput
+      - run: python manage.py test tests --verbosity 2
+      - run: python manage.py collectstatic --noinput
+        env:
+          DEBUG: "False"
+      - run: python manage.py check --deploy --fail-level WARNING
+        env:
+          DEBUG: "False"
+          SECRET_KEY: ci-only-production-check-key-with-enough-entropy-and-length-68294
+          SITE_URL: https://clinic.example.com
+          ALLOWED_HOSTS: clinic.example.com
+          CSRF_TRUSTED_ORIGINS: https://clinic.example.com

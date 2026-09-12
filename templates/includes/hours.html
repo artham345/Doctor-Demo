@@ -1,0 +1,1 @@
+<div class="hours-list">{% for period in periods %}<div><span>{{ period.get_day_of_week_display }}</span><strong>{{ period.start_time|time:'g:i A' }} – {{ period.end_time|time:'g:i A' }}</strong></div>{% empty %}<p>Please call the clinic for working hours.</p>{% endfor %}</div><small>All times in {{ clinic_timezone }}. Holidays may vary.</small>

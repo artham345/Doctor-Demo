@@ -1,0 +1,116 @@
+doctor_website/
+├── .github/
+│   └── workflows/
+│       └── tests.yml
+├── clinic/
+│   ├── management/
+│   │   ├── commands/
+│   │   │   ├── __init__.py
+│   │   │   ├── cleanup_operational_data.py
+│   │   │   ├── create_doctor.py
+│   │   │   ├── remove_demo.py
+│   │   │   └── seed_demo.py
+│   │   └── __init__.py
+│   ├── migrations/
+│   │   ├── 0001_initial.py
+│   │   └── __init__.py
+│   ├── __init__.py
+│   ├── admin.py
+│   ├── admin_forms.py
+│   ├── context_processors.py
+│   ├── forms.py
+│   ├── middleware.py
+│   ├── models.py
+│   ├── security.py
+│   ├── services.py
+│   ├── storage.py
+│   └── views.py
+├── config/
+│   ├── __init__.py
+│   ├── asgi.py
+│   ├── settings.py
+│   ├── urls.py
+│   └── wsgi.py
+├── notifications/
+│   ├── management/
+│   │   ├── commands/
+│   │   │   ├── __init__.py
+│   │   │   └── send_notifications.py
+│   │   └── __init__.py
+│   ├── migrations/
+│   │   ├── 0001_initial.py
+│   │   └── __init__.py
+│   ├── __init__.py
+│   ├── admin.py
+│   ├── models.py
+│   └── services.py
+├── static/
+│   ├── css/
+│   │   └── style.css
+│   ├── images/
+│   │   └── favicon.svg
+│   ├── js/
+│   │   ├── booking.js
+│   │   └── site.js
+│   └── vendor/
+│       ├── LICENSE.bootstrap
+│       ├── bootstrap.bundle.min.js
+│       ├── bootstrap.bundle.min.js.map
+│       ├── bootstrap.min.css
+│       └── bootstrap.min.css.map
+├── templates/
+│   ├── appointments/
+│   │   ├── book.html
+│   │   └── confirmation.html
+│   ├── doctor/
+│   │   ├── appointment_detail.html
+│   │   ├── appointments.html
+│   │   ├── base.html
+│   │   ├── calendar.html
+│   │   ├── dashboard.html
+│   │   ├── inbox.html
+│   │   ├── leave.html
+│   │   ├── login.html
+│   │   ├── password.html
+│   │   ├── patient_detail.html
+│   │   ├── patients.html
+│   │   ├── profile.html
+│   │   ├── schedule.html
+│   │   └── services.html
+│   ├── emails/
+│   │   ├── appointment.html
+│   │   └── appointment.txt
+│   ├── errors/
+│   │   ├── 500.html
+│   │   └── error.html
+│   ├── includes/
+│   │   ├── appointment_table.html
+│   │   ├── confirm_modal.html
+│   │   ├── form.html
+│   │   ├── hours.html
+│   │   ├── messages.html
+│   │   ├── pagination.html
+│   │   ├── portrait.html
+│   │   └── service_cards.html
+│   ├── public/
+│   │   ├── about.html
+│   │   ├── contact.html
+│   │   ├── home.html
+│   │   ├── privacy.html
+│   │   └── services.html
+│   └── base.html
+├── tests/
+│   ├── __init__.py
+│   └── test_clinic.py
+├── .env.example
+├── .gitattributes
+├── .gitignore
+├── FILE_TREE.txt
+├── README.md
+├── VERIFICATION.md
+├── build.sh
+├── compose.yaml
+├── gunicorn.conf.py
+├── manage.py
+├── render.yaml
+└── requirements.txt
