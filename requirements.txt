@@ -6,3 +6,5 @@ python-dotenv==1.2.3
 Pillow==12.3.0
 django-storages[s3]==1.14.6
 gunicorn==26.2.0
+cloudinary
+django-cloudinary-storage
