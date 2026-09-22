@@ -1,0 +1,35 @@
+<header class="clinic-header">
+  <div class="container-wide clinic-header-top">
+    <a class="clinic-logo" href="{% url 'home' %}"><span class="clinic-logo-mark" aria-hidden="true">+</span><span>{{ clinic.clinic_name|default:'Your clinic' }}<small>{{ clinic.specialization|default:'Personalized healthcare' }}</small></span></a>
+    <div class="clinic-quick-links">
+      <a href="{% url 'about' %}" class="clinic-quick-link">
+        <svg viewBox="0 0 24 24" aria-hidden="true"><circle cx="12" cy="6" r="4"/><path d="M3 22v-3a9 9 0 0 1 18 0v3M8 12v6m-2 0h4m6-6v5"/><circle cx="16" cy="19" r="2"/></svg>
+        <span><strong>Find a Doctor</strong><small>Meet your doctor</small></span>
+      </a>
+      <a href="{% url 'book' %}" class="clinic-quick-link appointment-link">
+        <svg viewBox="0 0 24 24" aria-hidden="true"><rect x="3" y="5" width="18" height="17" rx="1"/><path d="M7 2v6m10-6v6M3 11h18M8 14v5m4-5v5m4-5v5M6 16h12"/></svg>
+        <span><strong>Appointment</strong><small>Book now</small></span>
+      </a>
+      <a href="tel:{{ clinic.phone }}" class="clinic-quick-link clinic-call">
+        <svg viewBox="0 0 24 24" aria-hidden="true"><path d="m7 3 3 5-3 3a16 16 0 0 0 6 6l3-3 5 3-2 4C10 22 2 14 3 5ZM15 3a7 7 0 0 1 6 6m-6-2a3 3 0 0 1 2 2"/></svg>
+        <span><strong>Call the Clinic</strong><small>{{ clinic.phone }}</small></span>
+      </a>
+    </div>
+  </div>
+  <nav class="clinic-nav-band" aria-label="Main navigation">
+    <div class="container-wide navbar navbar-expand-lg clinic-nav">
+      <span class="clinic-mobile-label">Explore the clinic</span>
+      <button class="navbar-toggler" type="button" data-bs-toggle="collapse" data-bs-target="#main-nav" aria-controls="main-nav" aria-expanded="false" aria-label="Toggle navigation"><span class="navbar-toggler-icon"></span></button>
+      <div class="collapse navbar-collapse" id="main-nav">
+        <div class="navbar-nav">
+          <a class="nav-link {% if request.resolver_match.url_name == 'home' %}active{% endif %}" {% if request.resolver_match.url_name == 'home' %}aria-current="page"{% endif %} href="{% url 'home' %}">Home</a>
+          <a class="nav-link {% if request.resolver_match.url_name == 'about' %}active{% endif %}" {% if request.resolver_match.url_name == 'about' %}aria-current="page"{% endif %} href="{% url 'about' %}">About the Doctor</a>
+          <a class="nav-link {% if request.resolver_match.url_name == 'services' %}active{% endif %}" {% if request.resolver_match.url_name == 'services' %}aria-current="page"{% endif %} href="{% url 'services' %}">Services</a>
+          <a class="nav-link {% if request.resolver_match.url_name == 'book' %}active{% endif %}" {% if request.resolver_match.url_name == 'book' %}aria-current="page"{% endif %} href="{% url 'book' %}">Book an Appointment</a>
+          <a class="nav-link {% if request.resolver_match.url_name == 'contact' %}active{% endif %}" {% if request.resolver_match.url_name == 'contact' %}aria-current="page"{% endif %} href="{% url 'contact' %}">Contact Us</a>
+        </div>
+        <a class="clinic-nav-call" href="tel:{{ clinic.phone }}"><svg viewBox="0 0 24 24" aria-hidden="true"><path d="m7 3 3 5-3 3a16 16 0 0 0 6 6l3-3 5 3-2 4C10 22 2 14 3 5Z"/></svg>Call for Enquiries</a>
+      </div>
+    </div>
+  </nav>
+</header>

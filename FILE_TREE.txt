@@ -50,6 +50,7 @@ doctor_website/
 │   └── views.py
 ├── static/
 │   ├── css/
+│   │   ├── header.css
 │   │   └── style.css
 │   ├── images/
 │   │   └── favicon.svg
@@ -91,6 +92,7 @@ doctor_website/
 │   │   ├── appointment_table.html
 │   │   ├── confirm_modal.html
 │   │   ├── form.html
+│   │   ├── header.html
 │   │   ├── hours.html
 │   │   ├── messages.html
 │   │   ├── pagination.html

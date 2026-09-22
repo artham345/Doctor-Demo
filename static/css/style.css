@@ -221,7 +221,7 @@ small,
   gap: 15px;
 }
 .nav-link {
-  font-size: 0.88rem;
+  font-size: 1rem;
   color: #50646b;
 }
 .nav-link.active {
